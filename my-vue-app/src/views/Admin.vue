@@ -12,9 +12,13 @@
       </el-page-header>
       
       <!-- 横向菜单 -->
-      <el-menu :default-active="activeMenu" mode="horizontal" @select="handleMenuSelect">
-        <el-menu-item index="1">管理家庭成员信息</el-menu-item>
-        <el-menu-item index="2">设置和管理家庭预算</el-menu-item>
+      <el-menu 
+      :default-active="$route.path" 
+      mode="horizontal" 
+      router
+      >
+        <el-menu-item :index="'/admin/manage-members'">管理家庭成员信息</el-menu-item>
+        <el-menu-item :index="'/admin/manage-budget'">设置和管理家庭预算</el-menu-item>
         <el-menu-item index="3">查看和分析家庭财务报告</el-menu-item>
         <el-menu-item index="4">发布家庭财务公告和通知</el-menu-item>
         <el-menu-item index="5">处理家庭成员的财务建议</el-menu-item>
@@ -22,122 +26,8 @@
   
       <el-container>
         <el-main>
-          <!-- 页面内容，根据选择的菜单项显示不同的内容 -->
-          <div v-if="activeMenu === '1'">
-        <!-- ---------------------------------------------------管理家庭成员信息 ----------------------------------------->
-        <section id="manage-members" class="manage-members-section">
-            <el-card>
-            <h2>管理家庭成员信息</h2>
-            <el-table :data="members" style="width: 100%">
-                <el-table-column prop="name" label="姓名" width="180"></el-table-column>
-                <el-table-column prop="email" label="电子邮箱" width="220"></el-table-column>
-                <el-table-column prop="phone" label="电话" width="180"></el-table-column>
-                <el-table-column prop="dateRegistered" label="注册日期" width="180" :formatter="formatDate"></el-table-column>
-                <el-table-column prop="relationship" label="关系" width="180"></el-table-column>
-                <el-table-column label="操作">
-                <template #default="scope">
-                    <el-button @click="editMember(scope.row)">编辑</el-button>
-                    <el-button type="danger" @click="deleteMember(scope.row)">删除</el-button>
-                </template>
-                </el-table-column>
-            </el-table>
-            <el-button @click="addMember">添加成员</el-button>
-            </el-card>
-        </section>
-        </div>
+          <router-view :adminId = "adminId"></router-view>
 
-
-
-        <!-- 添加成员的弹出框 -->
-  <el-dialog v-model="dialogVisible" title="添加家庭成员">
-    <el-form :model="form" label-width="120px">
-      <el-form-item label="选择成员">
-        <el-select v-model="form.userId" placeholder="请选择成员">
-          <el-option
-            v-for="user in users"
-            :key="user.userId"
-            :label="user.fullName"
-            :value="user.userId"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="关系">
-        <el-input v-model="form.relationship" placeholder="请输入关系"></el-input>
-      </el-form-item>
-    </el-form>
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="dialogVisible = false">取消</el-button>
-      <el-button type="primary" @click="saveMember">确定</el-button>
-    </span>
-  </el-dialog>
-
-  
-        <div v-if="activeMenu === '2'">
-  <!----------------------------------------------------设置和管理预算 -------------------------------------------------->
-  <section id="manage-budget">
-    <el-card>
-      <h2>设置和管理家庭预算</h2>
-
-      <!-- 表格显示预算内容 -->
-      <el-table :data="budgets" style="width: 100%">
-        <el-table-column prop="amount" label="预算金额" width="150">
-          <template #default="scope">
-            <el-input v-model="scope.row.amount" type="number"></el-input>
-          </template>
-        </el-table-column>
-
-        <el-table-column prop="startDate" label="开始日期" width="250">
-          <template #default="scope">
-            <el-date-picker 
-              v-model="scope.row.startDate" 
-              type="date" 
-              placeholder="选择日期" 
-              format="YYYY-MM-DD"
-            ></el-date-picker>
-          </template>
-        </el-table-column>
-
-        <el-table-column prop="endDate" label="结束日期" width="250">
-          <template #default="scope">
-            <el-date-picker 
-              v-model="scope.row.endDate" 
-              type="date" 
-              placeholder="选择日期" 
-              format="YYYY-MM-DD"
-            ></el-date-picker>
-          </template>
-        </el-table-column>
-
-        <el-table-column prop="category" label="预算类别" width="200">
-          <template #default="scope">
-            <el-select v-model="scope.row.category" placeholder="请选择类别">
-              <el-option label="Food" value="Food"></el-option>
-              <el-option label="Transportation" value="Transportation"></el-option>
-              <el-option label="Entertainment" value="Entertainment"></el-option>
-              <el-option label="Clothing" value="Clothing"></el-option>
-              <el-option label="Shopping" value="Shopping"></el-option>
-            </el-select>
-          </template>
-        </el-table-column>
-
-
-        <el-table-column label="操作" width="150">
-          <template #default="scope">
-            <el-button type="danger" @click="deleteBudget(scope.row)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <!-- 添加新预算 -->
-      <el-button type="primary" @click="addBudget" style="margin-top: 15px;">添加预算</el-button>
-
-      <!-- 保存按钮 -->
-      <el-button type="success" @click="saveBudgets" style="margin-top: 15px;">保存所有预算</el-button>
-    </el-card>
-  </section>
-</div>
-  
-         
  <!-- -----------------------------------------------查看和分析家庭财务报告 ----------------------------------------------->
           <div v-show="activeMenu === '3'">
             <section id="financial-report">

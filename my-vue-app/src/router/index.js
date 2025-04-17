@@ -33,7 +33,19 @@ const routes = [
   },
   { path: '/admin', 
     name: 'Admin', 
-    component: Admin 
+    component: Admin,
+    children:[
+      {
+        path:'manage-members',
+        name:'ManageMembers',
+        component: () => import('../components/admin/ManageMembers.vue')
+      },
+      {
+        path:'manage-budget',
+        name:'ManageBudget',
+        component: () => import('../components/admin/ManageBudget.vue')
+      }
+    ] 
   },
   {
     path:'/member/:memberName',
