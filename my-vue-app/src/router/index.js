@@ -44,6 +44,21 @@ const routes = [
         path:'manage-budget',
         name:'ManageBudget',
         component: () => import('../components/admin/ManageBudget.vue')
+      },
+      {
+        path:'financial-report',
+        name:'FinancialReport',
+        component: () => import('../components/admin/FinancialReport.vue')
+      },
+      {
+        path:'announcements',
+        name:'announcements',
+        component: () => import('../components/admin/Announcements.vue')
+      },
+      {
+        path:'financial-suggestions',
+        name:'FinancialSuggestions',
+        component: () => import('../components/admin/FinancialSuggestions.vue')
       }
     ] 
   },
