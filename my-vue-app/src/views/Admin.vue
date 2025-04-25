@@ -9,6 +9,11 @@
         <template #title>
           管理员: {{ adminName }}
         </template>
+
+        <template #extra>
+          <el-button type="danger" @click="handleLogout">退出登录</el-button>
+        </template>
+        
       </el-page-header>
       
       <!-- 横向菜单 -->
@@ -89,6 +94,20 @@ console.log('Admin Name:', adminName.value)
     router.back()
     // 返回上一页逻辑
   }
+
+
+  const handleLogout = () => {
+  ElMessageBox.confirm('确定要退出登录吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    // 清除登录状态（根据实际实现调整）
+    localStorage.removeItem('token')
+    // 跳转到登录页
+    router.push('/login')
+  }).catch(() => {})
+}
 
   </script>
   
