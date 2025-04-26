@@ -59,6 +59,11 @@ const routes = [
         path:'financial-suggestions',
         name:'FinancialSuggestions',
         component: () => import('../components/admin/FinancialSuggestions.vue')
+      },
+      {
+        path:'personal-information',
+        name:'PersonalInformation',
+        component: () =>  import('../components/admin/PersonalInformation.vue')
       }
     ] 
   },

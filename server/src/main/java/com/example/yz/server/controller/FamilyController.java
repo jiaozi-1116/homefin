@@ -159,14 +159,6 @@ public class FamilyController {
         // 从请求体中提取 userId 和 relationship
         int userId = (int) request.get("userId");
         String relationship = (String) request.get("relationship");
-
-        // 验证家庭是否存在
-        //Family family = familyService.findFamilyByAdminId(familyID);
-
-        // 验证用户是否存在
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "用户不存在"));
-
         // 检查用户是否已是家庭成员（可选）
         FamilyMember existingMember = familyMemberRepository.findByUserIDAndFamilyID(userId, familyID);
         if (existingMember != null) {

@@ -27,6 +27,7 @@
         <el-menu-item :index="'/admin/financial-report'">查看和分析家庭财务报告</el-menu-item>
         <el-menu-item :index="'/admin/announcements'">发布家庭财务公告和通知</el-menu-item>
         <el-menu-item :index="'/admin/financial-suggestions'">处理家庭成员的财务建议</el-menu-item>
+        <el-menu-item :index="'/admin/personal-information'">个人信息</el-menu-item>
       </el-menu>
   
       <el-container>
@@ -116,27 +117,82 @@ console.log('Admin Name:', adminName.value)
 
 
   <style scoped>
-  /* 固定页面头部到顶部，并使其宽度占满整个浏览器宽度 */
-.page-header {
-  position: fixed;   /* 固定定位 */
-  top: 0;             /* 靠近顶部 */
-  left: 0;            /* 靠近左侧 */
-  width: 100%;        /* 宽度等于浏览器的宽度 */
-  height: 5%;
-  z-index: 1000;      /* 确保在其他元素上面 */
-  background-color: #fff; /* 可选，确保头部背景为白色 */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 可选，添加阴影效果 */
-}
-
-
-.el-menu--horizontal {
-  --el-menu-horizontal-height: 70px;
-  margin-top: 70px;
-}
-
-
-
-
-
+  /* 页面整体背景 */
+  .el-container {
+    background: #f5f7fa;
+    min-height: 100vh;
+  }
+  
+  /* 头部样式 */
+  .page-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    z-index: 1000;
+    background: linear-gradient(135deg, #4a6fa5 0%, #355081 100%);
+    box-shadow: 0 2px 15px rgba(58, 89, 136, 0.15);
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+  }
+  
+  .page-header :deep(.el-page-header__title),
+  .page-header :deep(.el-page-header__content) {
+    color: #fff !important;
+    font-size: 18px;
+    font-weight: 500;
+  }
+  
+  /* 菜单样式 */
+  .el-menu--horizontal {
+    margin-top: 60px;
+    background: linear-gradient(135deg, #f8f9fc 0%, #e9eff5 100%);
+    border-bottom: 1px solid #e4e7ed;
+    padding: 0 20px;
+  }
+  
+  .el-menu--horizontal > .el-menu-item {
+    height: 60px;
+    line-height: 60px;
+    margin: 0 15px;
+    color: #4a5568;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  .el-menu--horizontal > .el-menu-item:hover {
+    background-color: rgba(74, 111, 165, 0.1);
+    color: #355081;
+  }
+  
+  .el-menu--horizontal > .el-menu-item.is-active {
+    color: #355081;
+    border-bottom: 3px solid #4a6fa5;
+  }
+  
+  /* 退出按钮样式 */
+  .page-header .el-button--danger {
+    background: #ff6b6b;
+    border-color: #ff6b6b;
+    border-radius: 20px;
+    padding: 8px 20px;
+    transition: all 0.3s ease;
+  }
+  
+  .page-header .el-button--danger:hover {
+    background: #ff5252;
+    border-color: #ff5252;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 12px rgba(255, 82, 82, 0.3);
+  }
+  
+  /* 内容区域 */
+  .el-main {
+    padding: 100px 30px 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
   </style>
   

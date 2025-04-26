@@ -98,3 +98,91 @@ const handleLogout = () => {
   }).catch(() => {})
 }
 </script>
+
+<style scoped>
+/* 整体背景 */
+.el-container {
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+/* 头部样式 - 深靛蓝色调 */
+.page-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  z-index: 1000;
+  background: linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%);
+  box-shadow: 0 2px 15px rgba(43, 108, 176, 0.15);
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+}
+
+.page-header :deep(.el-page-header__title),
+.page-header :deep(.el-page-header__content) {
+  color: #fff !important;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* 家庭选择器样式 */
+.el-select {
+  --el-select-input-focus-border-color: #4c51bf;
+}
+.el-select:hover :deep(.el-input__wrapper) {
+  box-shadow: 0 0 0 1px #4c51bf inset !important;
+}
+
+/* 菜单样式 - 浅靛蓝渐变 */
+.el-menu--horizontal {
+  margin-top: 60px;
+  background: linear-gradient(135deg, #f8fafc 0%, #ebf4ff 100%);
+  border-bottom: 1px solid #c3dafe;
+  padding: 0 20px;
+}
+
+.el-menu--horizontal > .el-menu-item {
+  height: 60px;
+  line-height: 60px;
+  margin: 0 15px;
+  color: #4a5568;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.el-menu--horizontal > .el-menu-item:hover {
+  background-color: rgba(76, 81, 191, 0.08);
+  color: #2b6cb0;
+}
+
+.el-menu--horizontal > .el-menu-item.is-active {
+  color: #2c5282;
+  border-bottom: 3px solid #4c51bf;
+}
+
+/* 退出按钮 */
+.el-button--danger {
+  background: #fc8181;
+  border-color: #fc8181;
+  border-radius: 20px;
+  padding: 8px 20px;
+  transition: all 0.3s ease;
+}
+
+.el-button--danger:hover {
+  background: #f56565;
+  border-color: #f56565;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 12px rgba(245, 101, 101, 0.2);
+}
+
+/* 内容区域 */
+.el-main {
+  padding: 100px 30px 30px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+</style>
