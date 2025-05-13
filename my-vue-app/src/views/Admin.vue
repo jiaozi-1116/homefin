@@ -22,11 +22,13 @@
       mode="horizontal" 
       router
       >
-        <el-menu-item :index="'/admin/manage-members'">管理家庭成员信息</el-menu-item>
-        <el-menu-item :index="'/admin/manage-budget'">设置和管理家庭预算</el-menu-item>
-        <el-menu-item :index="'/admin/financial-report'">查看和分析家庭财务报告</el-menu-item>
-        <el-menu-item :index="'/admin/announcements'">发布家庭财务公告和通知</el-menu-item>
-        <el-menu-item :index="'/admin/financial-suggestions'">处理家庭成员的财务建议</el-menu-item>
+        <el-menu-item :index="'/admin/manage-members'">家庭成员信息</el-menu-item>
+        <el-menu-item :index="'/admin/manage-budget'">家庭预算</el-menu-item>
+        <el-menu-item :index="'/admin/detail'">家庭明细</el-menu-item>
+        <el-menu-item :index="'/admin/admincalendar'">日历</el-menu-item>
+        <!-- <el-menu-item :index="'/admin/financial-report'">家庭财务报告</el-menu-item> -->
+        <el-menu-item :index="'/admin/announcements'">家庭财务公告和通知</el-menu-item>
+        <el-menu-item :index="'/admin/financial-suggestions'">家庭成员的财务建议</el-menu-item>
         <el-menu-item :index="'/admin/personal-information'">个人信息</el-menu-item>
       </el-menu>
   

@@ -1,6 +1,8 @@
 package com.example.yz.server.service;
 
 import com.example.yz.server.dto.ReportRequest;
+import com.example.yz.server.mapper.ExpenseMapper;
+import com.example.yz.server.mapper.IncomeMapper;
 import com.example.yz.server.pojo.Expense;
 import com.example.yz.server.pojo.Family;
 import com.example.yz.server.pojo.FinancialReport;
@@ -9,6 +11,10 @@ import com.example.yz.server.repository.ExpenseRepository;
 import com.example.yz.server.repository.FamilyRepository;
 import com.example.yz.server.repository.FinancialReportRepository;
 import com.example.yz.server.repository.IncomeRepository;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.functions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +28,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class FinancialReportService {
+    @Autowired
+    private ExpenseMapper expenseMapper;
+    @Autowired
+    private IncomeMapper incomeMapper;
 
     @Autowired
     private FinancialReportRepository reportRepository;
@@ -171,6 +181,42 @@ public class FinancialReportService {
         BigDecimal healthIndex = savingsRatio.multiply(BigDecimal.valueOf(100));
         return healthIndex.max(BigDecimal.ZERO).min(BigDecimal.valueOf(100)); // 确保在0-100之间
     }
+
+
+
+//    public void generateFamilyFinancialReports() {
+//        // 初始化SparkSession
+//        SparkSession spark = SparkSession.builder()
+//                .appName("FamilyFinanceAnalyzer")
+//                .master("local[*]") // 生产环境改为集群地址
+//                .getOrCreate();
+//
+//        // 从数据库加载数据（MyBatis-Plus查询）
+//        List<com.example.yz.server.entity.Expense> expenses = expenseMapper.selectList(null);
+//        List<com.example.yz.server.entity.Income> incomes = incomeMapper.selectList(null);
+//
+//        // 转为Spark DataFrame
+//        Dataset<Row> expenseDF = spark.createDataFrame(expenses, Expense.class);
+//        Dataset<Row> incomeDF = spark.createDataFrame(incomes, Income.class);
+//
+//        // 数据分析逻辑（示例：计算各家庭支出分类汇总）
+//        Dataset<Row> reportDF = expenseDF.groupBy("familyID", "category")
+//                .agg(functions.sum("amount").as("totalExpense"))
+//                .join(incomeDF.groupBy("familyID")
+//                                .agg(functions.sum("amount").as("totalIncome")),
+//                        "familyID");
+//
+//        // 生成JSON报告
+//        String jsonReport = reportDF.toJSON().collectAsList().toString();
+//
+//        // 存储到数据库（MyBatis-Plus）
+//        FinancialReport report = new FinancialReport();
+//        report.setFamilyId(familyId);
+//        report.setContent(jsonReport); // JSON格式存储
+//        reportMapper.insert(report);
+//
+//        spark.stop();
+//    }
 
 
 

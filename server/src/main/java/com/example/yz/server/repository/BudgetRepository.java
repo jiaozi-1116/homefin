@@ -1,10 +1,16 @@
 package com.example.yz.server.repository;
 
+import com.example.yz.server.dto.CategorySummaryDTO;
 import com.example.yz.server.pojo.Budget;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -27,4 +33,5 @@ public interface BudgetRepository extends JpaRepository<Budget, Integer> {
 
     // 根据 FamilyID 和 Category 查找预算
     List<Budget> findByFamilyIdAndCategory(Integer familyId, String category);
+
 }

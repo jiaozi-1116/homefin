@@ -1,11 +1,11 @@
 <template>
     <section id="manage-clients">
       <el-card>
-        <h2>管理客户档案和信息</h2>
+        <h2>查看家庭信息</h2>
   
         <!-- 当前选择的客户 -->
         <el-card shadow="hover" style="margin-bottom: 20px;">
-          <h3>当前客户</h3>
+          <h3>家庭管理员</h3>
           <el-button type="primary" @click="showEditDialog">编辑信息</el-button>
           <el-descriptions v-if="currentClient" border>
             <el-descriptions-item label="姓名">{{ currentClient.fullName }}</el-descriptions-item>
@@ -13,18 +13,19 @@
             <el-descriptions-item label="电话">{{ currentClient.phoneNumber }}</el-descriptions-item>
             <el-descriptions-item label="注册日期">{{ currentClient.dateRegistered }}</el-descriptions-item>
           </el-descriptions>
-          <el-empty v-else description="未选择客户" />
+          <el-empty v-else description="未找到家庭管理员" />
         </el-card>
   
-        <!-- 其他客户 -->
+        <!-- 家庭成员 -->
         <el-card shadow="hover">
-          <h3>其他客户</h3>
-          <el-table :data="otherClients" style="width: 100%" border>
-            <el-table-column prop="fullName" label="姓名" width="180"></el-table-column>
+          <h3>家庭成员</h3>
+          <el-table :data="familyMembers" style="width: 100%" border>
+            <el-table-column prop="name" label="姓名" width="180"></el-table-column>
             <el-table-column prop="email" label="邮箱"></el-table-column>
-            <el-table-column prop="phoneNumber" label="电话"></el-table-column>
+            <el-table-column prop="phone" label="电话"></el-table-column>
             <el-table-column prop="dateRegistered" label="注册日期"></el-table-column>
           </el-table>
+          <el-empty v-if="familyMembers.length === 0" description="暂无家庭成员" />
         </el-card>
       </el-card>
 
@@ -57,9 +58,7 @@
   <script setup>
   import { ref, onMounted, watch } from 'vue';
   import axios from 'axios';
-  import { ElMessage } from 'element-plus';
-  // 在原有导入基础上添加 ElLoading 和 ElNotification
-import { ElLoading, ElNotification } from 'element-plus';
+  import { ElMessage, ElLoading, ElNotification } from 'element-plus';
   
   const props = defineProps({
     advisorName: {
@@ -72,62 +71,58 @@ import { ElLoading, ElNotification } from 'element-plus';
     }
   });
   
-  // 当前客户信息
+  // 当前家庭管理员信息
   const currentClient = ref(null);
   
-  // 其他客户列表
-  const otherClients = ref([]);
+  // 家庭成员列表
+  const familyMembers = ref([]);
   
-  // 加载当前客户信息
+  // 加载当前家庭管理员信息
   const loadCurrentClient = async () => {
     try {
-      // 获取当前家庭的 adminId
+      // 获取当前家庭的信息
       const familyResponse = await axios.get(`http://localhost:8081/api/family/find/${props.familyId}`);
-      console.log('当前家庭：',familyResponse.data)
+      console.log('当前家庭：', familyResponse.data);
       const adminId = familyResponse.data.adminID;
-      console.log('adminId:',adminId)
+      console.log('adminId:', adminId);
   
-      // 获取当前客户信息
+      // 获取家庭管理员信息
       const userResponse = await axios.get(`http://localhost:8081/api/users/${adminId}`);
       currentClient.value = userResponse.data;
-      console.log('当前客户信息：',currentClient.value)
+      console.log('家庭管理员信息：', currentClient.value);
     } catch (error) {
-      ElMessage.error('加载当前客户信息失败: ' + error.message);
+      ElMessage.error('加载家庭管理员信息失败: ' + error.message);
     }
   };
   
-  // 加载其他客户信息
-  const loadOtherClients = async () => {
+  // 加载家庭成员信息
+  const loadFamilyMembers = async () => {
     try {
-      // 获取所有 role 为 Admin 的用户
-      const response = await axios.get('http://localhost:8081/api/users');
-      const allAdmins = response.data.filter(user => user.role === 'Admin');
-      console.log('所有 role 为 Admin 的用户:',allAdmins)
-  
-      // 排除当前客户
+      // 获取家庭成员信息（假设API提供了这样的接口）
+      const response = await axios.get(`http://localhost:8081/api/family/${props.familyId}/members`);
+      familyMembers.value = response.data;
+      console.log('家庭成员信息:', familyMembers.value);
+      
+      // 过滤掉管理员（如果管理员也在成员列表中）
       if (currentClient.value) {
-        otherClients.value = allAdmins.filter(admin => admin.userId !== currentClient.value.userId);
-      } else {
-        otherClients.value = allAdmins;
+        familyMembers.value = familyMembers.value.filter(member => member.userId !== currentClient.value.userId);
       }
     } catch (error) {
-      ElMessage.error('加载其他客户信息失败: ' + error.message);
+      ElMessage.error('加载家庭成员信息失败: ' + error.message);
     }
   };
   
   // 监听 familyId 变化
   watch(() => props.familyId, async () => {
     await loadCurrentClient();
-    await loadOtherClients();
+    await loadFamilyMembers();
   });
   
   // 初始化加载数据
   onMounted(async () => {
     await loadCurrentClient();
-    await loadOtherClients();
+    await loadFamilyMembers();
   });
-
-
 
 const editDialogVisible = ref(false);
 const editForm = ref({
@@ -182,7 +177,7 @@ const submitEditForm = async () => {
 
         // 刷新数据
         await loadCurrentClient();
-        await loadOtherClients();
+        await loadFamilyMembers();
         editDialogVisible.value = false;
     } catch (error) {
         if (error.response) {

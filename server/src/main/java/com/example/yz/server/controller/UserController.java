@@ -38,4 +38,6 @@ public class UserController {
         User updatedUser = userService.updateUser(userId, user);
         return ResponseEntity.ok(updatedUser);
     }
+
+
 }

@@ -1,5 +1,6 @@
 package com.example.yz.server.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -10,6 +11,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "incomes")
+@TableName("incomes")
 public class Income {
 
     @Id

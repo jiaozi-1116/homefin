@@ -1,11 +1,14 @@
 package com.example.yz.server.repository;
 
+import com.example.yz.server.dto.StatisticResult;
 import com.example.yz.server.pojo.Expense;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.math.BigDecimal;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +23,11 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
     List<Expense> findByDateYearAndDateMonth(Integer year, Integer month);
 
     List<Expense> findByUserId(Integer userId);
-    List<Expense> findByFamilyId(Integer familyId);
+
+    @Query("SELECT e FROM Expense e WHERE e.familyId = :familyId " +
+            "AND YEAR(e.date) = YEAR(CURRENT_DATE) " +
+            "AND MONTH(e.date) = MONTH(CURRENT_DATE)")
+    List<Expense> findByFamilyId(@Param("familyId") Integer familyId);
 
     @Query("SELECT SUM(e.amount) FROM Expense e " +
             "WHERE e.familyId = :familyId " +
@@ -41,5 +48,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
             @Param("year") Integer year,
             @Param("month") Integer month
     );
+
+
 
 }

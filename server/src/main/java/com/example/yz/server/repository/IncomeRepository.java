@@ -1,11 +1,15 @@
 package com.example.yz.server.repository;
 
+import com.example.yz.server.dto.StatisticResult;
 import com.example.yz.server.pojo.Income;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.math.BigDecimal;
+
+
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +25,12 @@ public interface IncomeRepository extends JpaRepository<Income, Integer> {
 
     //获取用户的收入
     List<Income> findByUserId(Integer userId);
-    List<Income> findByFamilyId(Integer familyId);
+
+
+    @Query("SELECT i FROM Income i WHERE i.familyId = :familyId " +
+            "AND YEAR(i.date) = YEAR(CURRENT_DATE) " +
+            "AND MONTH(i.date) = MONTH(CURRENT_DATE)")
+    List<Income> findByFamilyId(@Param("familyId") Integer familyId);
 
     @Query("SELECT SUM(i.amount) FROM Income i " +
             "WHERE i.familyId = :familyId " +
@@ -42,5 +51,6 @@ public interface IncomeRepository extends JpaRepository<Income, Integer> {
             @Param("year") Integer year,
             @Param("month") Integer month
     );
+
 
 }

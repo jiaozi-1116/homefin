@@ -12,7 +12,7 @@
                   <el-input v-model="member.phone"></el-input>
               </el-form-item>
               <el-form-item label="注册日期">
-                  <el-date-picker v-model="member.dateRegistered" type="date" format="yyyy-MM-dd"></el-date-picker>
+                  <el-date-picker v-model="member.dateRegistered" type="date" format="YYYY-MM-DD"></el-date-picker>
               </el-form-item>
               <el-form-item label="关系">
                   <el-input v-model="member.relationship"></el-input>

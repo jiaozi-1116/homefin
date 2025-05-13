@@ -23,7 +23,7 @@
         </div>
 
          <!-- 添加成员的弹出框 -->
-  <el-dialog v-model="dialogVisible" title="添加家庭成员">
+  <!-- <el-dialog v-model="dialogVisible" title="添加家庭成员">
     <el-form :model="form" label-width="120px">
       <el-form-item label="选择成员">
         <el-select v-model="form.userId" placeholder="请选择成员">
@@ -31,6 +31,32 @@
             v-for="user in users"
             :key="user.userId"
             :label="user.fullName"
+            :value="user.userId"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="关系">
+        <el-input v-model="form.relationship" placeholder="请输入关系"></el-input>
+      </el-form-item>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="dialogVisible = false">取消</el-button>
+      <el-button type="primary" @click="saveMember">确定</el-button>
+    </span>
+  </el-dialog> -->
+  <el-dialog v-model="dialogVisible" title="添加家庭成员">
+    <el-form :model="form" label-width="120px">
+      <el-form-item label="选择成员">
+        <el-select 
+          v-model="form.userId" 
+          placeholder="请输入电话号码或姓名搜索" 
+          filterable
+          :filter-method="handleFilter"
+        >
+          <el-option
+            v-for="user in filteredUsers"
+            :key="user.userId"
+            :label="`${user.fullName} (${user.phoneNumber})`"
             :value="user.userId"
           ></el-option>
         </el-select>
@@ -59,8 +85,8 @@
   const router = useRouter()
   const route = useRoute()
 // 使用 ref 来存储 adminId 和 adminName
-
-
+  const users = ref([]);  // 存储所有用户
+const filteredUsers = ref([]) // 新增过滤后的用户列表
 const userInfo = JSON.parse(localStorage.getItem('userInfo'))
 
 const adminName = ref('')
@@ -81,6 +107,40 @@ const adminId = ref(userInfo.id)
         fetchFamilyMembers() 
     })
 
+
+      // 用户搜索过滤
+  const handleFilter = (query) => {
+    if (query) {
+      const lowerQuery = query.toLowerCase()
+      filteredUsers.value = users.value.filter(user => 
+  user.phoneNumber?.toLowerCase().includes(lowerQuery) ||
+  user.fullName?.toLowerCase().includes(lowerQuery)
+)
+    } else {
+      filteredUsers.value = [...users.value]
+    }
+  }
+
+  // 初始化用户数据
+  onMounted(async () => {
+    try {
+      const response = await axios.get('http://localhost:8081/api/users')
+      users.value = response.data
+      filteredUsers.value = [...response.data] // 初始化过滤列表
+    } catch (error) {
+      ElMessage.error('加载用户数据失败')
+    }
+
+    try {
+      const response = await axios.get(`http://localhost:8081/api/family/${adminId.value}`)
+      familyID.value = response.data
+    } catch (error) {
+      console.error('获取家庭ID失败', error)
+    }
+  })
+
+
+    
     const formatDate = (row, column, cellValue) => { 
       const date = new Date(cellValue); 
       const year = date.getFullYear(); 
@@ -91,7 +151,7 @@ const adminId = ref(userInfo.id)
 
 
   //----------------------------------------------------添加家庭成员---------------------------------------------
-  const users = ref([]);  // 存储所有用户
+
 
 
   const dialogVisible = ref(false);
@@ -107,6 +167,7 @@ onMounted(async () => {
   try {
     const response = await axios.get('http://localhost:8081/api/users');
     users.value = response.data;
+    filteredUsers.value = [...response.data] // 初始化过滤列表
   } catch (error) {
     ElMessage.error('加载用户数据失败');
   }

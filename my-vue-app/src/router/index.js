@@ -64,6 +64,16 @@ const routes = [
         path:'personal-information',
         name:'PersonalInformation',
         component: () =>  import('../components/admin/PersonalInformation.vue')
+      },
+      {
+        path:'detail',
+        name:'Detail',
+        component: () =>  import('../components/admin/detail.vue')
+      },
+      {
+        path:'admincalendar',
+        name:'AdminCalendar',
+        component: () =>  import('../components/admin/AdminCalendar.vue')
       }
     ] 
   },
@@ -93,9 +103,9 @@ const routes = [
         component: () => import('../components/member/Chart.vue')
       },
       {
-        path:'suggestion',
-        name:'Suggestion',
-        component: () => import('../components/member/Suggestion.vue')
+        path:'calendar',
+        name:'Calendar',
+        component: () => import('../components/member/Calendar.vue')
       },
       {
         path:'discussion',
@@ -117,6 +127,11 @@ const routes = [
         name:'ManageAccount',
         component: () => import('../components/member/ManageAccount.vue')
       },
+      {
+        path:'suggestion',
+        name:'Suggestion',
+        component: () => import('../components/member/Suggestion.vue')
+      }
     ]
   },
   // {
@@ -176,6 +191,10 @@ const routes = [
       {
         path: '', // 默认子路由
         redirect: 'financial-overview' // 直接使用路径名，避免命名路由冲突
+      },
+      {
+        path:'suggestion',
+        component: () => import('../components/advisor/Suggestion.vue')
       }
     ]
   }

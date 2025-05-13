@@ -29,4 +29,7 @@ public class Suggestion {
     @Column(name = "Status")
     private String status;
 
+    @Column(name = "Title")
+    private String title;
+
 }

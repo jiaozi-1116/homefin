@@ -29,13 +29,14 @@
       mode="horizontal" 
       router
     >
-      <el-menu-item :index="`/advisor/${advisorName}/financial-overview`">查看财务情况</el-menu-item>
-      <el-menu-item :index="`/advisor/${advisorName}/financial-analysis`">财务分析和建议</el-menu-item>
-      <el-menu-item :index="`/advisor/${advisorName}/generate-reports`">生成财务报告和规划</el-menu-item>
+      <el-menu-item :index="`/advisor/${advisorName}/financial-overview`">财务情况</el-menu-item>
+      <el-menu-item :index="`/advisor/${advisorName}/financial-analysis`">财务分析</el-menu-item>
+      <!-- <el-menu-item :index="`/advisor/${advisorName}/generate-reports`">生成财务报告和规划</el-menu-item> -->
       <!-- <el-menu-item :index="`/advisor/${advisorName}/online-consultation`">在线沟通和咨询</el-menu-item>
       <el-menu-item :index="`/advisor/${advisorName}/recommend-products`">推荐理财产品和方案</el-menu-item> -->
-      <el-menu-item :index="`/advisor/${advisorName}/manage-clients`">管理客户档案和信息</el-menu-item>
-      <el-menu-item :index="`/advisor/${advisorName}/meetings`">参与家庭财务会议和讨论</el-menu-item>
+      <el-menu-item :index="`/advisor/${advisorName}/manage-clients`">查看家庭信息</el-menu-item>
+      <el-menu-item :index="`/advisor/${advisorName}/suggestion`">家庭财务建议</el-menu-item>
+      <!-- <el-menu-item :index="`/advisor/${advisorName}/meetings`">参与家庭财务会议和讨论</el-menu-item> -->
       <el-menu-item :index="`/advisor/${advisorName}/publish-materials`">发布财务知识和宣传材料</el-menu-item>
       <el-menu-item :index="`/advisor/${advisorName}/personal-details`">个人信息</el-menu-item>
     </el-menu>

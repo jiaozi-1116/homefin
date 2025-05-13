@@ -1,38 +1,37 @@
-package com.example.yz.server.pojo;
+package com.example.yz.server.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Data
-@Entity
-@Table(name = "financialreports")
-public class FinancialReport {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ReportID")
+@Data
+@TableName("financialreports")
+public class FinancialReport {
+    @TableId(type = IdType.AUTO)
+    @TableField("ReportID")
     private Integer reportId;
 
-    @Column(name = "FamilyID", nullable = false)
+    @TableField(value = "FamilyID", exist = true)
     private Integer familyId;
 
-//    @Column(name = "UserID", nullable = false)
-//    private Integer userId;
-
-    @Column(name = "report_type", length = 50, nullable = false)
+    @TableField(value = "report_type", exist = true)
     private String reportType;
 
     private Integer year;
 
     private Integer month;
 
-    @Column(name = "generated_date", nullable = false)
+    @TableField(value = "generated_date", exist = true)
     private LocalDate generatedDate;
 
-    @Column(name = "financial_health_index")
+    @TableField(value = "financial_health_index", exist = true)
     private BigDecimal financialHealthIndex;
 }
 

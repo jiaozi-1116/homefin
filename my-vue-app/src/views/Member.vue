@@ -24,8 +24,10 @@
         <el-menu-item :index="`/member/${memberName}/record-income`">记录收入</el-menu-item>
         <el-menu-item :index="`/member/${memberName}/record-expense`">记录支出</el-menu-item>
         <el-menu-item :index="`/member/${memberName}/chart`">统计图表</el-menu-item>
+        <el-menu-item :index="`/member/${memberName}/calendar`">日历</el-menu-item>
         <el-menu-item :index="`/member/${memberName}/suggestion`">财务建议和反馈</el-menu-item>
-        <el-menu-item :index="`/member/${memberName}/discussion`">家庭财务讨论</el-menu-item>
+        
+        <!-- <el-menu-item :index="`/member/${memberName}/discussion`">家庭财务讨论</el-menu-item> -->
         <el-menu-item :index="`/member/${memberName}/notice`">家庭公告和通知</el-menu-item>
         <!-- <el-menu-item index="8">查看和管理个人理财项目</el-menu-item> -->
         <el-menu-item :index="`/member/${memberName}/budget`">个人预算</el-menu-item>

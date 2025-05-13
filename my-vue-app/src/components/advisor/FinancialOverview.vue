@@ -1,228 +1,318 @@
-  <template>
-    <section id="view-financial-overview">
-      <el-card>
-        <h2>{{ advisorName }} - 家庭财务概览（家庭 ID: {{ familyId }}）</h2>
-  
-        <!-- 按日期汇总 -->
-        <el-table :data="financialData" style="width: 100%" border v-loading="loading">
-          <el-table-column prop="date" label="日期" width="180" sortable></el-table-column>
-          <el-table-column label="收入（元）" width="180">
-            <template #default="{ row }">
-              <span style="color: #67C23A">{{ row.totalIncome.toFixed(2) }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="支出（元）" width="180">
-            <template #default="{ row }">
-              <span style="color: #F56C6C">{{ row.totalExpense.toFixed(2) }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="净收入（元）">
-            <template #default="{ row }">
-              <span :style="{ color: row.netIncome >= 0 ? '#67C23A' : '#F56C6C' }">
-                {{ row.netIncome.toFixed(2) }}
+<template>
+  <div class="financial-analysis">
+    <el-card class="summary-card">
+      <div class="summary-container">
+        <div class="summary-item">
+          <h3>本月总收入</h3>
+          <p class="income">¥ {{ incomeTotal.toLocaleString() }}</p>
+        </div>
+        <div class="summary-item">
+          <h3>本月总支出</h3>
+          <p class="expense">¥ {{ expenseTotal.toLocaleString() }}</p>
+        </div>
+        <div class="summary-item">
+          <h3>当前结余</h3>
+          <p :class="balanceClass">¥ {{ (incomeTotal - expenseTotal).toLocaleString() }}</p>
+        </div>
+      </div>
+    </el-card>
+
+    <el-row :gutter="20" class="chart-row">
+      <el-col :span="12">
+        <el-card>
+          <h3>收入来源分布</h3>
+          <div ref="incomeChartRef" style="height: 400px;"></div>
+        </el-card>
+      </el-col>
+      <el-col :span="12">
+        <el-card>
+          <h3>支出类别分布</h3>
+          <div ref="expenseChartRef" style="height: 400px;"></div>
+        </el-card>
+      </el-col>
+    </el-row>
+
+    <!-- 新增预算查看部分 -->
+    <el-card class="budget-card">
+      <h2>家庭预算概览</h2>
+      <el-table :data="budgets" style="width: 100%">
+        <el-table-column prop="amount" label="预算金额" width="150">
+          <template #default="scope">
+            {{ formatCurrency(scope.row.amount) }}
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="startDate" label="开始日期" width="200">
+          <template #default="scope">
+            {{ formatDate(scope.row.startDate) }}
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="endDate" label="结束日期" width="200">
+          <template #default="scope">
+            {{ formatDate(scope.row.endDate) }}
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="category" label="预算类别" width="150">
+          <template #default="scope">
+            {{ scope.row.category }}
+          </template>
+        </el-table-column>
+
+        <el-table-column label="预算进度" width="300">
+          <template #default="scope">
+            <el-progress 
+              :text-inside="true" 
+              :stroke-width="24"
+              :percentage="calcPercentage(scope.row._categorySpent, scope.row.amount)"
+              :status="getProgressStatus(scope.row)"
+              :color="customColor"
+            >
+              <span class="progress-text">
+                {{ formatCurrency(scope.row._categorySpent) }} / {{ formatCurrency(scope.row.amount) }}
               </span>
-            </template>
-          </el-table-column>
-        </el-table>
+            </el-progress>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
+  </div>
+</template>
+
+<script setup>
+import { ref, watch, onMounted, nextTick, computed } from 'vue'
+import axios from 'axios'
+import * as echarts from 'echarts'
+import { ElMessage } from 'element-plus'
+
+const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+
+const props = defineProps({
+  familyId: {
+    type: Number,
+    required: true
+  }
+})
+
+// 图表实例
+let incomeChart = null
+let expenseChart = null
+const incomeChartRef = ref(null)
+const expenseChartRef = ref(null)
+
+// 数据状态
+const incomeTotal = ref(0)
+const expenseTotal = ref(0)
+const budgets = ref([])
+
+// 初始化图表
+const initChart = () => {
+  incomeChart = echarts.init(incomeChartRef.value)
+  expenseChart = echarts.init(expenseChartRef.value)
   
-        <!-- 分类统计 -->
-        <el-divider></el-divider>
-        <h3>分类统计</h3>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-card shadow="hover">
-              <h4>收入来源</h4>
-              <el-table :data="incomeByCategory" style="width: 100%">
-                <el-table-column prop="source" label="来源"></el-table-column>
-                <el-table-column prop="amount" label="金额" align="right">
-                  <template #default="{ row }">
-                    {{ row.amount.toFixed(2) }}
-                  </template>
-                </el-table-column>
-              </el-table>
-            </el-card>
-          </el-col>
-          <el-col :span="12">
-            <el-card shadow="hover">
-              <h4>支出分类</h4>
-              <el-table :data="expenseByCategory" style="width: 100%">
-                <el-table-column prop="category" label="类别"></el-table-column>
-                <el-table-column prop="amount" label="金额" align="right">
-                  <template #default="{ row }">
-                    {{ row.amount.toFixed(2) }}
-                  </template>
-                </el-table-column>
-              </el-table>
-            </el-card>
-          </el-col>
-        </el-row>
-      </el-card>
-    </section>
-  </template>
-  
-  <script setup>
-  import { ref, onMounted, watch } from 'vue';
-  import axios from 'axios';
-  import { ElMessage } from 'element-plus';
-  
-  const props = defineProps({
-    advisorName: {
-      type: String,
-      required: true
+  const commonOptions = {
+    tooltip: {
+      trigger: 'item'
     },
-    familyId: {
-      type: Number,
-      required: true
+    legend: {
+      orient: 'vertical',
+      left: 'left'
     }
-  });
+  }
 
-  console.log('家庭 ID:', props.familyId); // 调试日志
+  incomeChart.setOption({
+    ...commonOptions,
+    series: [{
+      type: 'pie',
+      data: []
+    }]
+  })
 
-  
-  // 财务数据状态
-  const financialData = ref([]);
-  const incomeByCategory = ref([]);
-  const expenseByCategory = ref([]);
-  const loading = ref(true);
-  
-// 获取家庭成员的用户ID列表
-const getFamilyUserIds = async () => {
+  expenseChart.setOption({
+    ...commonOptions,
+    series: [{
+      type: 'pie',
+      data: []
+    }]
+  })
+}
+
+// 获取财务数据
+const fetchFinancialData = async () => {
   try {
-    const res = await axios.get(`http://localhost:8081/api/family/${props.familyId}/members`);
-    console.log('家庭成员：',res)
-    // 确保返回的数据是数组
-    if (Array.isArray(res.data)) {
-      return res.data.map(member => member.id); // 提取每个成员的 id
-    } else {
-      ElMessage.error('返回数据格式不正确');
-      return [];
+    // 获取收入数据
+    const incomeRes = await axios.get(`http://localhost:8081/api/income/family/${props.familyId}`)
+    incomeTotal.value = incomeRes.data.reduce((sum, item) => sum + item.amount, 0)
+
+    // 获取支出数据
+    const expenseRes = await axios.get(`http://localhost:8081/api/expense/family/${props.familyId}`)
+    expenseTotal.value = expenseRes.data.reduce((sum, item) => sum + item.amount, 0)
+
+    // 更新图表
+    updateCharts(incomeRes.data, expenseRes.data)
+    
+    // 获取预算数据
+    await fetchBudgets()
+  } catch (error) {
+    console.error('获取财务数据失败:', error)
+  }
+}
+
+// 获取预算数据
+const fetchBudgets = async () => {
+  try {
+    const response = await axios.get(`http://localhost:8081/api/budgets/family/${props.familyId}`)
+    budgets.value = response.data
+    
+    // 获取每个预算类别的总花费
+    for (const budget of budgets.value) {
+      const startDate = new Date(budget.startDate)
+      const endDate = new Date(budget.endDate)
+      const summaryResponse = await axios.get(`http://localhost:8081/api/expense/category-summary/${props.familyId}`, {
+        params: {
+          startDate: startDate.toISOString().split('T')[0],
+          endDate: endDate.toISOString().split('T')[0]
+        }
+      })
+      budget._categorySpent = summaryResponse.data[budget.category] || 0
     }
   } catch (error) {
-    ElMessage.error('获取家庭成员失败: ' + error.message);
-    return [];
+    console.error("获取预算数据失败:", error)
   }
-};
-  
-  // 合并财务数据
-  const mergeFinancialData = async (userIds) => {
-    try {
-      // 获取所有用户的收入数据
-      const incomePromises = userIds.map(userId => 
-        axios.get(`http://localhost:8081/api/income/allIncome/${userId}`).catch(() => ({ data: [] }))
-      );
-      const incomeResponses = await Promise.all(incomePromises);
-      const allIncomes = incomeResponses.flatMap(res => res.data);
-      console.log('合并的收入数据：',allIncomes)
-  
-      // 获取所有用户的支出数据
-      const expensePromises = userIds.map(userId => 
-        axios.get(`http://localhost:8081/api/expense/allExpense/${userId}`).catch(() => ({ data: [] }))
-      );
-      const expenseResponses = await Promise.all(expensePromises);
-      const allExpenses = expenseResponses.flatMap(res => res.data);
-      console.log('合并的支出数据：',allExpenses)
-  
-      // 按日期汇总
-      const dailySummary = {};
-      allIncomes.forEach(income => {
-        const date = income.date;
-        dailySummary[date] = dailySummary[date] || { totalIncome: 0, totalExpense: 0 };
-        dailySummary[date].totalIncome += parseFloat(income.amount);
-      });
-      allExpenses.forEach(expense => {
-        const date = expense.date;
-        dailySummary[date] = dailySummary[date] || { totalIncome: 0, totalExpense: 0 };
-        dailySummary[date].totalExpense += parseFloat(expense.amount);
-      });
-  
-      // 格式化为数组
-      financialData.value = Object.entries(dailySummary)
-        .map(([date, values]) => ({
-          date,
-          totalIncome: values.totalIncome,
-          totalExpense: values.totalExpense,
-          netIncome: values.totalIncome - values.totalExpense
-        }))
-        .sort((a, b) => new Date(b.date) - new Date(a.date));
+}
 
-        console.log('概览：',financialData.value)
-  
-      // 分类统计收入
-      const incomeCategories = allIncomes.reduce((acc, income) => {
-        acc[income.source] = (acc[income.source] || 0) + parseFloat(income.amount);
-        return acc;
-      }, {});
-      incomeByCategory.value = Object.entries(incomeCategories)
-        .map(([source, amount]) => ({ source, amount }));
-  
-      // 分类统计支出
-      const expenseCategories = allExpenses.reduce((acc, expense) => {
-        acc[expense.category] = (acc[expense.category] || 0) + parseFloat(expense.amount);
-        return acc;
-      }, {});
-      expenseByCategory.value = Object.entries(expenseCategories)
-        .map(([category, amount]) => ({ category, amount }));
-  
-    } catch (error) {
-      ElMessage.error('数据处理失败');
-    } finally {
-      loading.value = false;
-    }
-  };
-  
+// 更新图表数据
+const updateCharts = (incomeData, expenseData) => {
+  // 处理收入数据
+  const incomeSourceMap = new Map()
+  incomeData.forEach(item => {
+    const total = incomeSourceMap.get(item.source) || 0
+    incomeSourceMap.set(item.source, total + item.amount)
+  })
 
-  // 初始化加载数据
-  onMounted(async () => {
-    const userIds = await getFamilyUserIds();
-    if (userIds.length > 0) {
-      console.log('userIds:',userIds)
-      await mergeFinancialData(userIds);
-    } else {
-      loading.value = false;
-    }
-  });
+  incomeChart.setOption({
+    series: [{
+      data: Array.from(incomeSourceMap).map(([name, value]) => ({ name, value }))
+    }]
+  })
 
+  // 处理支出数据
+  const expenseCategoryMap = new Map()
+  expenseData.forEach(item => {
+    const total = expenseCategoryMap.get(item.category) || 0
+    expenseCategoryMap.set(item.category, total + item.amount)
+  })
 
-  
-// 新增数据加载方法
-const loadData = async () => {
-  loading.value = true;
-  try {
-    const userIds = await getFamilyUserIds();
-    if (userIds.length > 0) {
-      await mergeFinancialData(userIds);
-    }
-  } catch (error) {
-    ElMessage.error('数据加载失败: ' + error.message);
-  } finally {
-    loading.value = false;
-  }
-};
+  expenseChart.setOption({
+    series: [{
+      data: Array.from(expenseCategoryMap).map(([name, value]) => ({ name, value }))
+    }]
+  })
+}
+
+// 计算百分比
+const calcPercentage = (spent, amount) => {
+  if (!amount || amount <= 0) return 0
+  const percentage = (spent / amount) * 100
+  return Math.min(percentage, 100).toFixed(1) // 最大显示100%
+}
+
+// 获取进度状态
+const getProgressStatus = (row) => {
+  if (row._categorySpent > row.amount) return 'exception'
+  if (row._categorySpent / row.amount >= 0.8) return 'warning'
+  return ''
+}
+
+const customColor = '#409eff' // 自定义正常状态颜色
+
+// 格式化金额
+const formatCurrency = (value) => {
+  return '¥' + (value ? Number(value).toFixed(2) : '0.00')
+}
+
+// 格式化日期
+const formatDate = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  const year = date.getFullYear()
+  const month = (date.getMonth() + 1).toString().padStart(2, '0')
+  const day = date.getDate().toString().padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+// 计算结余样式
+const balanceClass = computed(() => {
+  const balance = incomeTotal.value - expenseTotal.value
+  return balance >= 0 ? 'positive' : 'negative'
+})
 
 // 监听familyId变化
 watch(() => props.familyId, (newVal) => {
   if (newVal) {
-    console.log('familyId变化:', newVal);
-    loadData();
+    fetchFinancialData()
   }
-});
+})
 
-// 初始化加载数据
-onMounted(async () => {
-  await loadData();
-});
-  </script>
-  
-  <style scoped>
-  .el-card {
-    margin: 20px;
-  }
-  h2 {
-    margin-bottom: 20px;
-    color: #303133;
-  }
-  h3 {
-    margin: 20px 0;
-    color: #606266;
-  }
-  </style>
+// 初始化
+onMounted(() => {
+  nextTick(() => {
+    initChart()
+    if (props.familyId) {
+      fetchFinancialData()
+    }
+  })
+})
+</script>
+
+<style scoped>
+.summary-container {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px 0;
+}
+
+.summary-item {
+  text-align: center;
+}
+
+.summary-item h3 {
+  margin-bottom: 10px;
+  color: #666;
+}
+
+.summary-item p {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.income {
+  color: #67C23A;
+}
+
+.expense {
+  color: #F56C6C;
+}
+
+.positive {
+  color: #67C23A;
+}
+
+.negative {
+  color: #F56C6C;
+}
+
+.chart-row {
+  margin-top: 20px;
+}
+
+.budget-card {
+  margin-top: 20px;
+}
+
+.progress-text {
+  font-size: 12px;
+  color: #fff;
+}
+</style>

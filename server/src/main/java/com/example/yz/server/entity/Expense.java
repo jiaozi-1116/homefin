@@ -1,40 +1,39 @@
-package com.example.yz.server.pojo;
+package com.example.yz.server.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
-
 import java.util.Date;
 
 @Data
-@Entity
-@Table(name = "expenses")
 @TableName("expenses")
 public class Expense {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ExpenseID")
+    @TableId(type = IdType.AUTO)
+     @TableField("ExpenseID")
     private Integer expenseId; // 支出ID
 
-    @Column(name = "UserID")
+     @TableField("UserID")
     private Integer userId; // 用户ID
 
-    @Column(name = "FamilyID")
+     @TableField("FamilyID")
     private Integer familyId; // 家庭ID
 
-    @Column(name = "Amount", precision = 10, scale = 2)
+     @TableField("Amount")
     private BigDecimal amount; // 支出金额
 
-    @Column(name = "Category", length = 50)
+     @TableField("Category")
     private String category; // 支出类别
 
-    @Column(name = "Date")
+     @TableField("Date")
     private Date date; // 支出日期
 
-    @Column(name = "Description")
+     @TableField("Description")
     private String description; // 描述
 
 }
