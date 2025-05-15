@@ -72,8 +72,10 @@
 
           <el-table-column label="操作" width="150">
             <template #default="scope">
-              <el-button type="danger" @click="deleteBudget(scope.row)">删除</el-button>
-              <el-button type="primary" @click="showExpenseDetails(scope.row)">详情</el-button>
+              <div style="display: flex; flex-direction: column; align-items: center;">
+                <el-button type="danger" @click="deleteBudget(scope.row)" style="margin-bottom: 5px;">删除</el-button>
+                <el-button type="primary" @click="showExpenseDetails(scope.row)">详情</el-button>
+              </div>
             </template>
           </el-table-column>
         </el-table>

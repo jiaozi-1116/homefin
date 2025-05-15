@@ -3,7 +3,7 @@
         <!-- 第一行：时间范围选择 -->
         <div class="time-range-row">
             <span class="label">时间范围</span>
-            <el-select v-model="selectedTimeRange" placeholder="选择时间范围" @change="handleRangeChange">
+            <el-select v-model="selectedTimeRange" placeholder="选择时间范围" @change="handleRangeChange" style="width: 1000px">
                 <el-option label="周" value="week"></el-option>
                 <el-option label="月" value="month"></el-option>
                 <el-option label="年" value="year"></el-option>
@@ -69,9 +69,11 @@
                     </el-select>
                 </el-col>
                 <el-col :span="6">
-                    <el-button @click="filterRecords" type="primary">筛选</el-button>
-                    <el-button @click="resetFilters" type="primary" >重置</el-button>
-                </el-col>
+    <div class="button-group">
+        <el-button @click="filterRecords" type="primary" class="filter-btn">筛选</el-button>
+        <el-button @click="resetFilters" type="primary" class="filter-btn">重置</el-button>
+    </div>
+</el-col>
             </el-row>
             <el-row :gutter="20" class="advanced-filters">
                 <el-col :span="6">
@@ -467,5 +469,15 @@ onMounted(async () => {
 .el-col {
     display: flex;
     flex-direction: column;
+}
+
+.button-group {
+    display: flex;
+     margin-top: 28px; 
+    gap: 10px;
+}
+
+.filter-btn {
+    flex: 1;
 }
 </style>
