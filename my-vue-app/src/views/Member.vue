@@ -1,16 +1,21 @@
 <template>
     <div>
       <!-- 页面头部，显示家庭成员信息 -->
-      <el-page-header @back="goBack" content="家庭成员页面">
+      <el-page-header 
+        @back="goBack" 
+        content="家庭成员页面"
+        class="page-header"
+        >
         <template #title>
           家庭成员: {{ memberName }}
-
-          
         </template>
 
-        <el-button type="danger" @click="handleLogout" style="margin-left: 10px;">
+        <template #extra>
+          <el-button type="danger" @click="handleLogout">
           退出登录
         </el-button>
+        </template>
+        
       </el-page-header>
 
 
@@ -156,6 +161,8 @@ const handleLogout = () => {
   
   /* 菜单样式 - 浅绿渐变 */
   .el-menu--horizontal {
+    position: fixed;
+    width: 100%;
     margin-top: 60px;
     background: linear-gradient(135deg, #f0fff4 0%, #e6fffa 100%);
     border-bottom: 1px solid #c6f6d5;
@@ -199,7 +206,7 @@ const handleLogout = () => {
   
   /* 内容区域 */
   .el-main {
-    padding: 100px 30px 30px;
+    padding: 150px 30px 30px;
     max-width: 1400px;
     margin: 0 auto;
   }

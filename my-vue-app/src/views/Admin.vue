@@ -149,6 +149,8 @@ console.log('Admin Name:', adminName.value)
   
   /* 菜单样式 */
   .el-menu--horizontal {
+    position: fixed;
+    width: 100%;
     margin-top: 60px;
     background: linear-gradient(135deg, #f8f9fc 0%, #e9eff5 100%);
     border-bottom: 1px solid #e4e7ed;
@@ -192,7 +194,7 @@ console.log('Admin Name:', adminName.value)
   
   /* 内容区域 */
   .el-main {
-    padding: 100px 30px 30px;
+    padding: 150px 30px 30px;
     max-width: 1400px;
     margin: 0 auto;
   }

@@ -394,13 +394,13 @@ onMounted(async () => {
 }
 
 .stat-title {
-    font-size: 14px;
+    font-size: 20px;
     color: #666;
     margin-bottom: 5px;
 }
 
 .stat-value {
-    font-size: 24px;
+    font-size: 30px;
     font-weight: bold;
 }
 
