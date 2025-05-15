@@ -143,11 +143,11 @@ const initChart = () => {
 const fetchFinancialData = async () => {
   try {
     // 获取收入数据
-    const incomeRes = await axios.get(`http://localhost:8081/api/income/family/${props.familyId}`)
+    const incomeRes = await axios.get(`http://localhost:8081/api/income/family/${familyId.value}`)
     incomeTotal.value = incomeRes.data.reduce((sum, item) => sum + item.amount, 0)
 
     // 获取支出数据
-    const expenseRes = await axios.get(`http://localhost:8081/api/expense/family/${props.familyId}`)
+    const expenseRes = await axios.get(`http://localhost:8081/api/expense/family/${familyId.value}`)
     expenseTotal.value = expenseRes.data.reduce((sum, item) => sum + item.amount, 0)
 
     // 更新图表
@@ -163,14 +163,14 @@ const fetchFinancialData = async () => {
 // 获取预算数据
 const fetchBudgets = async () => {
   try {
-    const response = await axios.get(`http://localhost:8081/api/budgets/family/${props.familyId}`)
+    const response = await axios.get(`http://localhost:8081/api/budgets/family/${familyId.value}`)
     budgets.value = response.data
     
     // 获取每个预算类别的总花费
     for (const budget of budgets.value) {
       const startDate = new Date(budget.startDate)
       const endDate = new Date(budget.endDate)
-      const summaryResponse = await axios.get(`http://localhost:8081/api/expense/category-summary/${props.familyId}`, {
+      const summaryResponse = await axios.get(`http://localhost:8081/api/expense/category-summary/${familyId.value}`, {
         params: {
           startDate: startDate.toISOString().split('T')[0],
           endDate: endDate.toISOString().split('T')[0]
@@ -258,6 +258,7 @@ const balanceClass = computed(() => {
 
 // 初始化
 onMounted(() => {
+  fetchFinancialData()
   nextTick(() => {
     initChart()
   })

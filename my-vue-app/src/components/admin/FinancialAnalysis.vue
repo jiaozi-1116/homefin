@@ -125,7 +125,7 @@ const fetchTrendData = async () => {
     // 获取当前年数据
     const currentRes = await axios.get(`http://localhost:8081/api/financial/trend`, {
       params: {
-        familyId: props.familyId,
+        familyId: familyId.value,
         year: year.value
       }
     })
@@ -135,7 +135,7 @@ const fetchTrendData = async () => {
     const lastYear = parseInt(year.value) - 1
     const lastRes = await axios.get(`http://localhost:8081/api/financial/trend`, {
       params: {
-        familyId: props.familyId,
+        familyId: familyId.value,
         year: lastYear
       }
     })
@@ -395,6 +395,7 @@ const getSeasonalChartOption = (data) => {
 
 // 初始化
 onMounted(() => {
+  fetchTrendData()
   nextTick(() => {
     initCharts()
   })
