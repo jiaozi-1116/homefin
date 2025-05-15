@@ -85,6 +85,11 @@ const routes = [
         name:'financial-analysis',
         component: () =>  import('../components/admin/FinancialAnalysis.vue')
       },
+      {
+        path:'publish-materials',
+        name:'publish-materials',
+        component: () =>  import('../components/admin/PublishMaterials.vue')
+      },
     ] 
   },
   {

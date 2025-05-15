@@ -3,11 +3,11 @@
       <!-- 页面头部，显示管理员信息 -->
       <el-page-header 
         @back="goBack" 
-        content="家庭管理员页面"
+        content="户主页面"
         class="page-header"
         >
         <template #title>
-          管理员: {{ adminName }}
+          户主: {{ adminName }}
         </template>
 
         <template #extra>
@@ -31,6 +31,7 @@
          <el-menu-item :index="'/admin/financial-analysis'">财务分析</el-menu-item>
         <el-menu-item :index="'/admin/announcements'">家庭财务公告和通知</el-menu-item>
         <el-menu-item :index="'/admin/financial-suggestions'">家庭成员的财务建议</el-menu-item>
+        <el-menu-item :index="'/admin/publish-materials'">发布财务知识和宣传知识</el-menu-item>
         <el-menu-item :index="'/admin/personal-information'">个人信息</el-menu-item>
       </el-menu>
   

@@ -3,11 +3,11 @@
       <!-- 页面头部，显示家庭成员信息 -->
       <el-page-header 
         @back="goBack" 
-        content="家庭成员页面"
+        content="用户页面"
         class="page-header"
         >
         <template #title>
-          家庭成员: {{ memberName }}
+          用户: {{ memberName }}
         </template>
 
         <template #extra>
