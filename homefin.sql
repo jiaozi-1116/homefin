@@ -183,6 +183,7 @@ CREATE TABLE `suggestions`  (
   `Content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
   `date_submitted` date NULL DEFAULT NULL,
   `Status` enum('Pending','Reviewed','Implemented') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `Title` varchar(255),
   PRIMARY KEY (`SuggestionID`) USING BTREE,
   INDEX `UserID`(`UserID` ASC) USING BTREE,
   INDEX `FamilyID`(`FamilyID` ASC) USING BTREE,
