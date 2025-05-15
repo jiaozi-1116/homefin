@@ -74,7 +74,17 @@ const routes = [
         path:'admincalendar',
         name:'AdminCalendar',
         component: () =>  import('../components/admin/AdminCalendar.vue')
-      }
+      },
+      {
+        path:'financial-overview',
+        name:'financial-overview',
+        component: () =>  import('../components/admin/FinancialOverview.vue')
+      },
+      {
+        path:'financial-analysis',
+        name:'financial-analysis',
+        component: () =>  import('../components/admin/FinancialAnalysis.vue')
+      },
     ] 
   },
   {

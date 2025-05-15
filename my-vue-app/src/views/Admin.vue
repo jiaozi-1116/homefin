@@ -27,6 +27,8 @@
         <el-menu-item :index="'/admin/detail'">家庭明细</el-menu-item>
         <el-menu-item :index="'/admin/admincalendar'">日历</el-menu-item>
         <!-- <el-menu-item :index="'/admin/financial-report'">家庭财务报告</el-menu-item> -->
+         <el-menu-item :index="'/admin/financial-overview'">本月财务情况</el-menu-item>
+         <el-menu-item :index="'/admin/financial-analysis'">财务分析</el-menu-item>
         <el-menu-item :index="'/admin/announcements'">家庭财务公告和通知</el-menu-item>
         <el-menu-item :index="'/admin/financial-suggestions'">家庭成员的财务建议</el-menu-item>
         <el-menu-item :index="'/admin/personal-information'">个人信息</el-menu-item>
