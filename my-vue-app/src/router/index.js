@@ -90,6 +90,11 @@ const routes = [
         name:'publish-materials',
         component: () =>  import('../components/admin/PublishMaterials.vue')
       },
+      {
+        path:'family-member',
+        name:'family-member',
+        component: () =>  import('../components/admin/FamilyMember.vue')
+      },
     ] 
   },
   {
