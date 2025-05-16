@@ -1,6 +1,7 @@
 package com.example.yz.server.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.yz.server.entity.PurchaseImage;
 import com.example.yz.server.entity.PurchaseRequest;
 import com.example.yz.server.mapper.PurchaseImageMapper;
 import com.example.yz.server.mapper.PurchaseRequestMapper;
@@ -62,5 +63,13 @@ public class PurchaseService {
 
     public List<Map<String, Object>> getMembersRequests(Integer familyId) {
         return requestMapper.selectPendingRequests(familyId);
+    }
+
+    public PurchaseRequest detail (Integer request){
+        return requestMapper.selectById(request);
+    }
+
+    public PurchaseImage getImage (Integer request){
+        return imageMapper.selectById(request);
     }
 }

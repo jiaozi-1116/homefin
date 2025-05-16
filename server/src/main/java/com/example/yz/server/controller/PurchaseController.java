@@ -73,4 +73,15 @@ public class PurchaseController {
         imageMapper.insert(image);
         return image;
     }
+
+    //详情
+    @GetMapping("/detail/{requestId}")
+    public PurchaseRequest getDetail( @PathVariable Integer requestId){
+        return purchaseService.detail(requestId);
+    }
+
+    @GetMapping("/images/{requestId}")
+    public PurchaseImage getImage( @PathVariable Integer requestId){
+        return purchaseService.getImage(requestId);
+    }
 }
