@@ -2,7 +2,7 @@
   <div>
     <section class="filter-section">
       <div class="filter-group">
-        <el-select v-model="timeRange" placeholder="选择统计范围" @change="handleRangeChange">
+        <el-select v-model="timeRange" placeholder="选择统计范围" @change="handleRangeChange" style="width: 620px;">
           <el-option label="周" value="week" />
           <el-option label="月" value="month" />
           <el-option label="年" value="year" />
@@ -14,6 +14,7 @@
           :format="dateFormat"
           placeholder="选择日期"
           @change="fetchData"
+          style="width: 620px;"
         />
       </div>
 
@@ -27,16 +28,16 @@
       <el-card class="stats-section">
         <el-row :gutter="20">
           <el-col :span="6" v-for="(card, index) in statsCards" :key="index">
-            <el-card class="stat-card">
-              <div class="card-content">
+            <el-card class="stat-card" style="height: 120px;">
+              <div class="card-content" style="text-align: center">
                 <div class="stat-title">{{ card.title }}</div>
-                <div class="stat-value">{{ card.value }}</div>
+                <div class="stat-value" style="font-size: 24px;">{{ card.value }}</div>
                 <div class="stat-detail" v-if="card.detail">{{ card.detail }}</div>
               </div>
             </el-card>
         </el-col>
         </el-row>
-        <el-card class="chart-card">
+        <el-card class="chart-card" style="margin-top: 20px;">
             <div ref="trendChart" style="height: 400px;"></div>
         </el-card>
       </el-card>
@@ -458,6 +459,7 @@ watch(showIncome, () => {
 
 .button-group {
   margin-top: 15px;
+  text-align: center;
 }
 
 .chart-section {
