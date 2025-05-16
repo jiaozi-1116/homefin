@@ -32,6 +32,7 @@
         <el-menu-item :index="'/admin/announcements'">家庭财务公告和通知</el-menu-item>
         <el-menu-item :index="'/admin/financial-suggestions'">家庭成员的财务建议</el-menu-item>
         <el-menu-item :index="'/admin/publish-materials'">发布财务知识和宣传知识</el-menu-item>
+        <el-menu-item :index="'/admin/purchase'">购入申请</el-menu-item>
         <el-menu-item :index="'/admin/personal-information'">个人信息</el-menu-item>
       </el-menu>
   

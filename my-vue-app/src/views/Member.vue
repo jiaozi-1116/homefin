@@ -36,8 +36,10 @@
         <el-menu-item :index="`/member/${memberName}/notice`">家庭公告和通知</el-menu-item>
         <!-- <el-menu-item index="8">查看和管理个人理财项目</el-menu-item> -->
         <el-menu-item :index="`/member/${memberName}/budget`">个人预算</el-menu-item>
-        <el-menu-item :index="`/member/${memberName}/manage-account`">个人信息和账户</el-menu-item>
+        
         <el-menu-item :index="`/member/${memberName}/financial-knowledge`">财务知识</el-menu-item>
+        <el-menu-item :index="`/member/${memberName}/purchase`">购入申请</el-menu-item>
+        <el-menu-item :index="`/member/${memberName}/manage-account`">个人信息</el-menu-item>
       </el-menu>
   
 

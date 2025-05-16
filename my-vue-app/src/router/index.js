@@ -95,6 +95,11 @@ const routes = [
         name:'family-member',
         component: () =>  import('../components/admin/FamilyMember.vue')
       },
+      {
+        path:'purchase',
+        name:'AdminPurchase',
+        component: () =>  import('../components/admin/PurchaseAdmin.vue')
+      },
     ] 
   },
   {
@@ -151,7 +156,12 @@ const routes = [
         path:'suggestion',
         name:'Suggestion',
         component: () => import('../components/member/Suggestion.vue')
-      }
+      },
+      {
+        path:'purchase',
+        name:'purchase',
+        component: () => import('../components/member/PurchaseMember.vue')
+      },
     ]
   },
   // {
