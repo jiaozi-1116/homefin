@@ -69,7 +69,7 @@ public class PurchaseService {
         return requestMapper.selectById(request);
     }
 
-    public PurchaseImage getImage (Integer request){
-        return imageMapper.selectById(request);
+    public List<PurchaseImage> getImage (Integer request){
+        return imageMapper.selectByRequestId(request);
     }
 }

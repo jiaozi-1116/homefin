@@ -54,8 +54,8 @@
           <el-image 
             v-for="(img, index) in images" 
             :key="index"
-            :src="'http://localhost:8081' + img.ImagePath" 
-            :preview-src-list="images.map(i => 'http://localhost:8081' + i.ImagePath)"
+            :src="'http://localhost:8081/uploads/' + img.imagePath" 
+            :preview-src-list="images.map(i => 'http://localhost:8081/uploads/' + i.imagePath)"
             fit="cover"
             style="width: 100px; height: 100px; margin-right: 10px;"
           />

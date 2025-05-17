@@ -81,7 +81,7 @@ public class PurchaseController {
     }
 
     @GetMapping("/images/{requestId}")
-    public PurchaseImage getImage( @PathVariable Integer requestId){
+    public List<PurchaseImage> getImage( @PathVariable Integer requestId){
         return purchaseService.getImage(requestId);
     }
 }
