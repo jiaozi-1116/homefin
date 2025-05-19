@@ -163,7 +163,7 @@
 
   const adminName = ref(userInfo.name)
   const adminId = ref(userInfo.id)
-  const memberId = userInfo.id;
+  const memberId = ref(userInfo.id)
 
   let familyID = ref(null);
 
@@ -193,7 +193,7 @@
     
     const budgetData = {
       ...newBudget.value,
-      familyId: familyID.value,
+      userId: memberId.value,
       isNew: true
     }
     

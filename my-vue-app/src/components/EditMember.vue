@@ -49,6 +49,7 @@ const getMemberById = async (id) => {
   try {
       const response = await axios.get(`http://localhost:8081/api/family/members/${id}`)
       member.value = response.data // 将获取的数据存入 member
+      console.log("获取成员数据:",member.value)
   } catch (error) {
       console.error('Error fetching member data:', error)
   }

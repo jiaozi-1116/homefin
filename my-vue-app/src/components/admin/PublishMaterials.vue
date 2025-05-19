@@ -119,17 +119,12 @@
   import { ElMessage } from 'element-plus';
 
   const userInfo = JSON.parse(localStorage.getItem('userInfo'))
-  const familyId = ref(userInfo.id)
+  const adminId = ref(userInfo.id)
+  let familyId = ref();
   
 // 文件列表引用
 const fileList = ref([]);
 
-  // const props = defineProps({
-  //   familyId: {
-  //     type: Number,
-  //     required: true
-  //   }
-  // })
 
   const form = ref({
     title: '',
@@ -174,7 +169,7 @@ const submitForm = async () => {
     formData.append('content', form.value.content);
     formData.append('category', form.value.category);
     formData.append('advisorID', userInfo.id);
-    formData.append('familyID', null);
+    formData.append('familyID', familyId.data);
 
     // 获取上传的文件（假设使用手动上传）
     if (fileList.value.length > 0) {
@@ -187,6 +182,7 @@ const submitForm = async () => {
       }
     });
     ElMessage.success('发布成功！');
+    fetchMaterials();
     formRef.value.resetFields();
     fileList.value = []; // 清空已选文件
   } catch (error) {
@@ -198,7 +194,7 @@ const submitForm = async () => {
 const materials = ref([])
   const loading = ref(true)
 
-  const memberId = JSON.parse(localStorage.getItem('userInfo'))?.id
+ 
   
   // 分类选项
   const Categories = ref([
@@ -214,7 +210,7 @@ const materials = ref([])
   const fetchMaterials = async () => {
     try {
       const params = {
-        familyId: familyId.value,
+        familyId: adminId.value,
         category: selectedCategory.value // 使用选中的分类
       }
       const response = await axios.get(
@@ -263,6 +259,8 @@ const materials = ref([])
   
   onMounted(async () => {
     // await getFamilyId()
+    familyId = await axios.get(`http://localhost:8081/api/family/${adminId.value}`)
+    console.log('familyId:',familyId.data)
     fetchMaterials()
   })
 

@@ -289,7 +289,7 @@ onMounted(fetchRequests)
 
 <style scoped>
 .purchase-container {
-  max-width: 1200px;
+  /* max-width: 1200px; */
   margin: 0 auto;
   padding: 20px;
 }
@@ -311,7 +311,7 @@ onMounted(fetchRequests)
 
 .grid-layout {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1fr 2.3fr;
   gap: 20px;
 }
 
@@ -378,7 +378,8 @@ onMounted(fetchRequests)
 }
 
 .request-table {
-  margin-top: 10px;
+  min-width: 100%;
+  table-layout: auto;
 }
 
 .amount-cell {

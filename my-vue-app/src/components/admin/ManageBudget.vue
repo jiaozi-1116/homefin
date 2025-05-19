@@ -355,7 +355,7 @@ const addUsernameToExpenseDetails = async () => {
       const user = userResponse.data;
       newExpenseDetails.push({
         ...item,
-        username: user.username
+        username: user.fullName
       });
     } catch (error) {
       console.error('获取用户信息失败:', error);

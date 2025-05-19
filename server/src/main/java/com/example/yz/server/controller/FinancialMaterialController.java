@@ -3,7 +3,6 @@ package com.example.yz.server.controller;
 import com.example.yz.server.exception.FileStorageException;
 import com.example.yz.server.exception.ResourceNotFoundException;
 import com.example.yz.server.pojo.FinancialMaterial;
-import com.example.yz.server.repository.FinancialMaterialRepository;
 import com.example.yz.server.service.FileStorageService;
 import com.example.yz.server.service.FinancialMaterialService;
 import lombok.Data;
@@ -34,7 +33,7 @@ public class FinancialMaterialController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createMaterial(
-            @RequestParam("file") MultipartFile file,
+            @RequestParam(name = "file", required = false) MultipartFile file,
             @ModelAttribute MaterialCreateDTO createDTO) {
         try {
             FinancialMaterial created = materialService.createMaterial(createDTO, file);
@@ -61,7 +60,15 @@ public class FinancialMaterialController {
     // 新增文件上传接口
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, String>> handleFileUpload(
-            @RequestParam("file") MultipartFile file) {
+            @RequestParam(name = "file", required = false) MultipartFile file) {
+
+        // 检查文件是否为空
+        if (file == null || file.isEmpty()) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("status", "error");
+            errorResponse.put("message", "未上传文件");
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
 
         try {
             // 存储文件并获取文件名

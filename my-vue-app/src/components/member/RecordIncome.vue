@@ -184,13 +184,16 @@ import dayjs from 'dayjs'
 const userInfo = JSON.parse(localStorage.getItem('userInfo'))
 const memberId = userInfo.id
 
+let familyID = ref()
+
 // 表单数据
 const incomeForm = ref({
   userId: memberId,
   amount: '',
   source: '',
   date: dayjs().format('YYYY-MM-DD'),
-  description: ''
+  description: '',
+  familyId: familyID.value
 })
 
 const incomeSources = ref([
@@ -248,7 +251,8 @@ const saveIncome = async () => {
       amount: '',
       source: '',
       date: dayjs().format('YYYY-MM-DD'),
-      description: ''
+      description: '',
+      familyId: familyID.value
     }
   } catch (error) {
     ElMessage.error('保存收入失败')
@@ -304,9 +308,21 @@ const filteredIncomes = computed(() => {
   })
 })
 
-onMounted(() => {
-  fetchIncomes()
-})
+const getFamilyId = async () => {
+  const response = await axios.get(`http://localhost:8081/api/member/findFamilyId/${memberId}`);
+  familyID.value = response.data
+  console.log("jiatingID:",familyID.value)
+}
+
+onMounted(async () => {
+  try {
+    await getFamilyId(); // 确保先获取 familyID
+    incomeForm.value.familyId = familyID.value; // 更新表单中的 familyId
+    await fetchIncomes();
+  } catch (error) {
+    console.error('获取数据时出错:', error);
+  }
+});
 </script>
 
 <style scoped>

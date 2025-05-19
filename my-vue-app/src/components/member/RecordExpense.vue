@@ -183,6 +183,7 @@ import dayjs from 'dayjs'
 
 const userInfo = JSON.parse(localStorage.getItem('userInfo'))
 const memberId = userInfo.id
+let familyID = ref();
 
 // 表单数据
 const expenseForm = ref({
@@ -190,7 +191,8 @@ const expenseForm = ref({
   amount: '',
   category: '',
   date: dayjs().format('YYYY-MM-DD'),
-  description: ''
+  description: '',
+  familyId: familyID.value
 })
 
 const expenseCategories = ref([
@@ -246,6 +248,7 @@ const fetchExpenses = async () => {
 const saveExpense = async () => {
   try {
     await axios.post('http://localhost:8081/api/expense', expenseForm.value)
+    console.log("保持的支出数据:",expenseForm.value)
     ElMessage.success('支出记录已保存')
     fetchExpenses()
     expenseForm.value = {
@@ -253,7 +256,8 @@ const saveExpense = async () => {
       amount: '',
       category: '',
       date: dayjs().format('YYYY-MM-DD'),
-      description: ''
+      description: '',
+      familyId: familyID.value
     }
   } catch (error) {
     ElMessage.error('保存支出失败')
@@ -307,11 +311,23 @@ const filteredExpenses = computed(() => {
     
     return categoryMatch && dateMatch && descMatch
   })
-})
+});
 
-onMounted(() => {
-  fetchExpenses()
-})
+const getFamilyId = async () => {
+  const response = await axios.get(`http://localhost:8081/api/member/findFamilyId/${memberId}`);
+  familyID.value = response.data
+  console.log("jiatingID:",familyID.value)
+}
+
+onMounted(async () => {
+  try {
+    await getFamilyId(); // 确保先获取 familyID
+    expenseForm.value.familyId = familyID.value; // 更新表单中的 familyId
+    await fetchExpenses();
+  } catch (error) {
+    console.error('获取数据时出错:', error);
+  }
+});
 </script>
 
 <style scoped>

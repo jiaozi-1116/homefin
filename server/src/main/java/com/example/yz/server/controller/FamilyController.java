@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -116,14 +115,14 @@ public class FamilyController {
         User user = userOpt.get();
 
         // 更新 User 信息
-        if (updatedData.getFullName() != null) {
-            user.setFullName(updatedData.getFullName());
+        if (updatedData.getName() != null) {
+            user.setFullName(updatedData.getName());
         }
         if (updatedData.getEmail() != null) {
             user.setEmail(updatedData.getEmail());
         }
-        if (updatedData.getPhoneNumber() != null) {
-            user.setPhoneNumber(updatedData.getPhoneNumber());
+        if (updatedData.getPhone() != null) {
+            user.setPhoneNumber(updatedData.getPhone());
         }
 
         // 保存更新后的数据
